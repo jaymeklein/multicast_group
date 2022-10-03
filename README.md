@@ -33,3 +33,7 @@ Sistema de leilão baseado num grupo multicast.
         <li></li>
     </ul>
 </ul>
+
+<ul>
+    <li>https://stackoverflow.com/questions/41385014/multithreading-to-run-udp-client-and-udp-server-in-the-same-program</li>
+</ul>

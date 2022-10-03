@@ -23,7 +23,7 @@ Sistema de leilão baseado num grupo multicast.
     <li>Cliente terá a chave simétrica e o endereço do grupo multicast.</li>
     <li>cada cliente terá seu par de chaves publicas / privadas.</li>
     <li>cliente enviará em texco claro a sua chave pública ao realizar o join.</li>
-    <li></li>
+    <li>O server udp possui a chave simétrica somente para criptografar as mensagens enviadas ao grupo multicast.<br>EQUANTO o cliente também possui essa chave para decriptografar as mensagens enviadas, (essa chave <strong>simétrica</strong>n ão tem correlação com o par de chaves publi/priv geradas pelo cliente.)</li>
     <li>Servidor responderá a solicitação com a mensagem criptografada com a chave PÚBLICA enviada no passo anterior, com a chave simétrica e o endereço do grupo multicast.</li>
     <li>O cliente irá decriptografar a chave simétrica enviada pelo servidor com sua própria chave privada. (dá pra fazer isso?)</li>
     <li>Caso a chave pública que o cliente enviou não esteja na lista do servidor, o join não ser</li>

@@ -6,9 +6,24 @@ class UDPClient:
     mcast_port = 5001
     mcast_ttl = 2
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, mcast_ttl)
-    sock.sendto(b'robot', (mcast_group, mcast_port))
+    
+    def __init__(self, ip, port):
+        self.mcast_group = ip
+        self.mcast_port = port        
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+        self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, self.mcast_ttl)
+        self.sock.settimeout(15)
+    
+    def mensagem_leilao(self):
+        while True:
+            msg = input('Digite uma mensagem ao grupo multicast ->').encode('utf-8')
+            self.sock.sendto(msg, (self.mcast_group, self.mcast_port))
+            
+            try:
+                print(self.sock.recvfrom(2048))
+            except TimeoutError:
+                pass
+
 
 
 class TCPClient:
@@ -31,4 +46,4 @@ class TCPClient:
         return data.decode()
 
 
-a = TCPClient(ip='10.1.1.156', port=5000)
+u = UDPClient(ip='192.168.56.1', port=5001).mensagem_leilao()

@@ -1,7 +1,7 @@
 import socket
 
-from Cryptodome.PublicKey import RSA
-from Cryptodome.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
 import os
 from os import makedirs
 from models import *

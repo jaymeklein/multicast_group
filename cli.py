@@ -35,9 +35,9 @@ class UDPClient:
 			data, comm = self.sock.recvfrom(2048)
 			data = loads(data.decode())
 			self.valor_atual = data['valor']
-			txt_lance_atual.configure(text=data, width=45)
+			txt_lance_atual.configure(text=data, width=125)
 
-		except TimeoutError:
+		except (TimeoutError, socket.timeout):
 			txt_sem_lance.configure(text='Não há lances novos.')
 			pass
 
@@ -158,7 +158,7 @@ class GUI:
 	def gui_entra_leilao(self) -> None:
 		window = Tk()
 		window.title("Leilão")
-		ico = tkinter.PhotoImage(file=r'C:\Users\jayme\Projects\multicast_group\Foto_Robson.jpg')
+		ico = tkinter.PhotoImage(file=r'C:\Users\Aluno\Documents\SCP\multicast_group\Foto_Robson.jpg')
 		window.wm_iconphoto(False, ico)
 
 		window.geometry("200x300")
@@ -212,21 +212,22 @@ class GUI:
 
 
 			try:
-				value = float(entry.get())
+				value = float(text)
 
 			except ValueError:
 				entry.delete(0, 'end')
 				txt_field.configure(text=f"Erro ao converter \n'{text}'\n para float.", height=3)
 
-				if self.udp.valor_atual + 10 > value:
-					self.txt_sem_lance.configure('O valor fornecido deve ter no mínimo 10,00\n a mais do valor atual do item.',
-					                             width=23,
-					                             height=50)
-					return None
+			if float(self.udp.valor_atual) + 10 > value:
+				self.txt_sem_lance.configure(text='O valor fornecido deve ter no mínimo 10,00\n a mais do valor atual do item.',
+												width=23,
+												height=50)
+				return None
 
-				elif value >= self.udp.valor_atual + 10 :
-					entry.delete(0, 'end')
-					self.udp.send(value)
+			elif value >= float(self.udp.valor_atual) + 10 :
+				entry.delete(0, 'end')
+				self.udp.send(value)
+
 
 
 	def click_sair_app(self, window) -> None:
@@ -238,7 +239,7 @@ class GUI:
 		self.udp.chave_simetrica = chave_simetrica
 		window = Tk()
 		window.title("Leilão")
-		ico = tkinter.PhotoImage(file=r'C:\Users\jayme\Projects\multicast_group\Foto_Robson.jpg')
+		ico = tkinter.PhotoImage(file=r'C:\Users\Aluno\Documents\SCP\multicast_group\Foto_Robson.jpg')
 		window.wm_iconphoto(False, ico)
 		window.resizable(width=False, height=False)
 		window.geometry("450x450")
@@ -252,7 +253,7 @@ class GUI:
 		entry_valor_lance = Entry(window, width=30)
 		txt_resposta_lance = Label(window, width=23, height=1)
 
-		self.txt_sem_lance = Label(window, width=23, height=3)
+		self.txt_sem_lance = Label(window, width=1, height=3)
 
 
 		self.btn_enviar_lance = Button(window,

@@ -31,7 +31,8 @@ class UDPServer:
         'item': 'celtinha rebaixado',
         'valor': 1000.00,
         'tempo_inicio': time.time(),
-        'tempo_fim': time.time() + 120
+        'tempo_fim': time.time() + 120,
+        'finalizado': False
     }
     connections = set()
 
@@ -41,7 +42,12 @@ class UDPServer:
 
     def listen(self):
         print(f'IP UDP: {self.ip}\nPort UDP: {self.port}\n')
-        while True:
+        self.ultimo_lance['tempo_restante'] =  self.ultimo_lance['tempo_fim'] - time.time()
+
+        while self.ultimo_lance['tempo_restante'] > 0:
+             
+            self.ultimo_lance['tempo_restante'] = self.ultimo_lance['tempo_fim'] - time.time()
+
             try:
                 data, comm = self.sock.recvfrom(2048)
 
@@ -65,6 +71,12 @@ class UDPServer:
                 continue
 
             pass
+        
+        for connection in self.connections:
+            self.ultimo_lance['finalizado'] = True
+            self.sock.sendto(dumps(self.ultimo_lance).encode(), connection)
+
+        return None
 
 class TCPServer:
     last_msg = None
@@ -97,7 +109,6 @@ class TCPServer:
                     data = self.verificar_chave_cliente(data.decode('utf-8'))
                     # Verificar se a chave pública enviada pelo cliente está na lista de chaves previamente cadastradas.
                     if data:
-                        # conn.sendall(b'AEEEE TUA CHAVE TA CADASTRADA DEMONIO. BEM VINDO PORRA')
 
                         dict_join = {
                             'ip': socket.gethostbyname(socket.gethostname()),
